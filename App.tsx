@@ -1,118 +1,88 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useState } from 'react';
 import {
+  Alert,
+  Button,
+  FlatList,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
-  useColorScheme,
-  View,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [id, onChangeId] = useState('')
+  const [password, onChangePassword] = useState('')
+  const [email, onChangeEmail] = useState('')
+  const [name, onChangeName] = useState('')
+  const [birthday, onChangeBirthday] = useState('')
+  const [gender, onChangeGender] = useState('')
+  const [countryCode, onChangeCountryCode] = useState('')
+  const [phoneNumber, onChangePhoneNumber] = useState('')
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+
+  const onPressLearnMore = () => {
+    console.log('onPress')
+    Alert.alert('인증요청!')
+  }
+
+  const gendercountryData = [
+    {title: '', countryData:['남자', '여자', '선택안함']}
+  ]
+
+  const countryData = [
+    {
+      countryCode: '+82',
+      country: '대한민국'
+    },
+    {
+      countryCode: '+83',
+      country: '테스트'
+    }
+  ]
+
+
+  const renderCountryItem = ({item}) => {
+    const backgroundColor = item.countryCode === countryCode ? '#6e3b6e' : '#f9c2ff';
+    const color = item.countryCode === countryCode ? 'white' : 'black';
+
+    return (
+      <TouchableOpacity onPress={() => onChangeCountryCode(item.countryCode)} style={[{backgroundColor}]}>
+        <Text style={[{color}]}>{item.country}</Text>
+      </TouchableOpacity>
+    )
+  }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView>
+      <TextInput value={id} onChangeText={onChangeId} placeholder="아이디"/>
+      <TextInput value={password} onChangeText={onChangePassword} placeholder="비밀번호"/>
+      <TextInput value={email} onChangeText={onChangeEmail} placeholder="[선택] 이메일주소 (비밀번호 찾기 확인용)" keyboardType='email-address'/>
+      <TextInput value={name} onChangeText={onChangeName} placeholder="이름"/>
+      <TextInput value={birthday} onChangeText={onChangeBirthday} placeholder="생년월일 8자리" keyboardType='number-pad'/>
+    
+      <Text>{gender}</Text>
+      <View>
+        <Button title="남자" onPress={() => onChangeGender('남자')}/>
+        <Button title="여자" onPress={() => onChangeGender('여자')}/>
+        <Button title="선택안함" onPress={() => onChangeGender('선택안함')}/>
+      </View>
+
+      <FlatList data={countryData}
+        renderItem={renderCountryItem}
+        keyExtractor={item => item.countryCode}
+        extraData={countryCode}/>
+
+      <TextInput value={phoneNumber} onChangeText={onChangePhoneNumber} placeholder="휴대전화번호" keyboardType='phone-pad'/>
+
+      <Button onPress={onPressLearnMore}
+        title="인증요청"
+        color="#09aa5c"
+        accessibilityLabel="authentication request button"/>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
