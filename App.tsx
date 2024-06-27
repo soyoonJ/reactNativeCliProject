@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
 	Alert,
-	Button,
 	FlatList,
 	SafeAreaView,
 	Text,
@@ -54,13 +53,13 @@ function App(): React.JSX.Element {
 	];
 
 	const renderGenderItem = ({ item }) => {
-		const backgroundColor = item.gender === gender ? '#6e3b6e' : '#f9c2ff';
 		const color = item.gender === gender ? 'white' : 'black';
+		const borderColor = item.gender === gender ? '#09aa5c' : '#6c6c6e99';
 
 		return (
 			<TouchableOpacity
 				onPress={() => onChangeGender(item.gender)}
-				style={{ backgroundColor }}>
+				style={{ borderColor }}>
 				<Text style={{ color }}>{item.gender}</Text>
 			</TouchableOpacity>
 		);
@@ -84,32 +83,38 @@ function App(): React.JSX.Element {
 
 	return (
 		<SafeAreaView>
-			<TextInput value={id} onChangeText={onChangeId} placeholder="아이디" />
+			<TextInput
+				value={id}
+				onChangeText={onChangeId}
+				placeholder="아이디"
+				style={[styles.input]}
+			/>
 			<TextInput
 				value={password}
 				onChangeText={onChangePassword}
 				placeholder="비밀번호"
+				style={[styles.input]}
 			/>
 			<TextInput
 				value={email}
 				onChangeText={onChangeEmail}
 				placeholder="[선택] 이메일주소 (비밀번호 찾기 확인용)"
 				keyboardType="email-address"
+				style={[styles.input]}
 			/>
-			<TextInput value={name} onChangeText={onChangeName} placeholder="이름" />
+			<TextInput
+				value={name}
+				onChangeText={onChangeName}
+				placeholder="이름"
+				style={[styles.input]}
+			/>
 			<TextInput
 				value={birthday}
 				onChangeText={onChangeBirthday}
 				placeholder="생년월일 8자리"
 				keyboardType="number-pad"
+				style={[styles.input]}
 			/>
-
-			{/* <Text>{gender}</Text>
-      <View>
-        <Button title="남자" onPress={() => onChangeGender('남자')}/>
-        <Button title="여자" onPress={() => onChangeGender('여자')}/>
-        <Button title="선택안함" onPress={() => onChangeGender('선택안함')}/>
-      </View> */}
 
 			<View>
 				<FlatList
@@ -126,6 +131,7 @@ function App(): React.JSX.Element {
 					renderItem={renderCountryItem}
 					keyExtractor={item => item.countryCode}
 					extraData={countryCode}
+					style={[styles.input]}
 				/>
 			</View>
 
@@ -144,14 +150,12 @@ function App(): React.JSX.Element {
 				onChangeText={onChangePhoneNumber}
 				placeholder="휴대전화번호"
 				keyboardType="phone-pad"
+				style={[styles.input]}
 			/>
 
-			<Button
-				onPress={onPressLearnMore}
-				title="인증요청"
-				color="#09aa5c"
-				accessibilityLabel="authentication request button"
-			/>
+			<TouchableOpacity onPress={onPressLearnMore} style={styles.button}>
+				<Text style={styles.buttonText}>인증요청</Text>
+			</TouchableOpacity>
 		</SafeAreaView>
 	);
 }
