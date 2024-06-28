@@ -18,7 +18,7 @@ function App(): React.JSX.Element {
 	const [name, onChangeName] = useState('');
 	const [birthday, onChangeBirthday] = useState('');
 	const [gender, onChangeGender] = useState('');
-	const [countryCode, onChangeCountryCode] = useState('');
+	const [countryCode, onChangeCountryCode] = useState('+82');
 	const [phoneNumber, onChangePhoneNumber] = useState('');
 
 	const onPressLearnMore = () => {
@@ -53,109 +53,107 @@ function App(): React.JSX.Element {
 	];
 
 	const renderGenderItem = ({ item }) => {
-		const color = item.gender === gender ? 'white' : 'black';
-		const borderColor = item.gender === gender ? '#09aa5c' : '#6c6c6e99';
+		const color = item.gender === gender ? '#09aa5c' : '#6c6c6e99';
 
 		return (
 			<TouchableOpacity
 				onPress={() => onChangeGender(item.gender)}
-				style={{ borderColor }}>
-				<Text style={{ color }}>{item.gender}</Text>
-			</TouchableOpacity>
-		);
-	};
-
-	const renderCountryItem = ({ item }) => {
-		const backgroundColor =
-			item.countryCode === countryCode ? '#6e3b6e' : '#f9c2ff';
-		const color = item.countryCode === countryCode ? 'white' : 'black';
-
-		return (
-			<TouchableOpacity
-				onPress={() => onChangeCountryCode(item.countryCode)}
-				style={[{ backgroundColor }]}>
-				<Text style={[{ color }]}>
-					{item.countryCode} {item.country}
-				</Text>
+				style={[
+					styles.selectBox,
+					{
+						borderColor: color,
+						borderTopLeftRadius: item.gender === '남자' ? 4 : 0,
+						borderBottomLeftRadius: item.gender === '남자' ? 4 : 0,
+						borderTopRightRadius: item.gender === '선택안함' ? 4 : 0,
+						borderBottomRightRadius: item.gender === '선택안함' ? 4 : 0,
+						marginLeft: item.gender !== '남자' ? -1 : 0,
+					},
+				]}>
+				<Text style={[styles.selectBoxText, { color }]}>{item.gender}</Text>
 			</TouchableOpacity>
 		);
 	};
 
 	return (
-		<SafeAreaView>
-			<TextInput
-				value={id}
-				onChangeText={onChangeId}
-				placeholder="아이디"
-				style={[styles.input]}
-			/>
-			<TextInput
-				value={password}
-				onChangeText={onChangePassword}
-				placeholder="비밀번호"
-				style={[styles.input]}
-			/>
-			<TextInput
-				value={email}
-				onChangeText={onChangeEmail}
-				placeholder="[선택] 이메일주소 (비밀번호 찾기 확인용)"
-				keyboardType="email-address"
-				style={[styles.input]}
-			/>
-			<TextInput
-				value={name}
-				onChangeText={onChangeName}
-				placeholder="이름"
-				style={[styles.input]}
-			/>
-			<TextInput
-				value={birthday}
-				onChangeText={onChangeBirthday}
-				placeholder="생년월일 8자리"
-				keyboardType="number-pad"
-				style={[styles.input]}
-			/>
-
-			<View>
-				<FlatList
-					data={genderData}
-					renderItem={renderGenderItem}
-					keyExtractor={item => item.id}
-					extraData={gender}
+		<SafeAreaView style={styles.pageContainer}>
+			<View style={styles.inputContainer}>
+				<TextInput
+					value={id}
+					onChangeText={onChangeId}
+					placeholder="아이디"
+					style={[styles.inputLayout, styles.inputLayoutTopRadius]}
+				/>
+				<TextInput
+					value={password}
+					onChangeText={onChangePassword}
+					placeholder="비밀번호"
+					style={[styles.inputLayout, styles.inputLayoutBorderMargin]}
+				/>
+				<TextInput
+					value={email}
+					onChangeText={onChangeEmail}
+					placeholder="[선택] 이메일주소 (비밀번호 찾기 확인용)"
+					keyboardType="email-address"
+					style={[
+						styles.inputLayout,
+						styles.inputLayoutBottomRadius,
+						styles.inputLayoutBorderMargin,
+					]}
 				/>
 			</View>
 
-			<View style={styles.sample}>
-				<FlatList
-					data={countryData}
-					renderItem={renderCountryItem}
-					keyExtractor={item => item.countryCode}
-					extraData={countryCode}
-					style={[styles.input]}
+			<View style={styles.inputContainer}>
+				<TextInput
+					value={name}
+					onChangeText={onChangeName}
+					placeholder="이름"
+					style={[styles.inputLayout, styles.inputLayoutTopRadius]}
+				/>
+				<TextInput
+					value={birthday}
+					onChangeText={onChangeBirthday}
+					placeholder="생년월일 8자리"
+					keyboardType="number-pad"
+					style={[styles.inputLayout, styles.inputLayoutBorderMargin]}
+				/>
+				<View style={[styles.inputLayout, styles.inputLayoutBorderMargin]}>
+					<FlatList
+						data={genderData}
+						renderItem={renderGenderItem}
+						keyExtractor={item => item.id}
+						extraData={gender}
+						style={styles.selectBoxContainer}
+						contentContainerStyle={styles.selectBoxLayout}
+					/>
+				</View>
+				<View>
+					<Dropdown
+						data={countryData}
+						labelField="country"
+						valueField="countryCode"
+						onChange={item => onChangeCountryCode(item.countryCode)}
+						value={countryCode}
+						style={[styles.inputLayout, styles.inputLayoutBorderMargin]}
+					/>
+				</View>
+				<TextInput
+					value={phoneNumber}
+					onChangeText={onChangePhoneNumber}
+					placeholder="휴대전화번호"
+					keyboardType="phone-pad"
+					style={[
+						styles.inputLayout,
+						styles.inputLayoutBottomRadius,
+						styles.inputLayoutBorderMargin,
+					]}
 				/>
 			</View>
 
-			<View>
-				<Dropdown
-					data={countryData}
-					labelField="country"
-					valueField="countryCode"
-					onChange={item => onChangeCountryCode(item.countryCode)}
-					value={countryCode}
-				/>
+			<View style={styles.buttonContainer}>
+				<TouchableOpacity onPress={onPressLearnMore} style={[styles.button]}>
+					<Text style={styles.buttonText}>인증요청</Text>
+				</TouchableOpacity>
 			</View>
-
-			<TextInput
-				value={phoneNumber}
-				onChangeText={onChangePhoneNumber}
-				placeholder="휴대전화번호"
-				keyboardType="phone-pad"
-				style={[styles.input]}
-			/>
-
-			<TouchableOpacity onPress={onPressLearnMore} style={styles.button}>
-				<Text style={styles.buttonText}>인증요청</Text>
-			</TouchableOpacity>
 		</SafeAreaView>
 	);
 }
